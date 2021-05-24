@@ -19,6 +19,7 @@ class ViewController: UIViewController {
     
     @IBOutlet weak var actionButton: UIButton!
     
+    private var currentLight = TrafficLights.red
     private let LightOn: CGFloat = 1
     private let LightOff: CGFloat = 0.3
     
@@ -26,27 +27,36 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         
         actionButton.layer.cornerRadius = 15
-        redLight.layer.cornerRadius = 50
-        yellowLight.layer.cornerRadius = 50
-        greenLight.layer.cornerRadius = 50
         
         redLight.alpha = LightOff
         yellowLight.alpha = LightOff
         greenLight.alpha = LightOff
     }
     
+    override func viewWillLayoutSubviews() {
+        redLight.layer.cornerRadius = redLight.frame.width / 2
+        yellowLight.layer.cornerRadius = yellowLight.frame.width / 2
+        greenLight.layer.cornerRadius = greenLight.frame.width / 2
+    }
+    
     @IBAction func actionButton(_ sender: Any) {
-        actionButton.setTitle("Next", for: .normal)
+        if actionButton.currentTitle == "Start" {
+            actionButton.setTitle("Next", for: .normal)
+        }
         
-        if redLight.alpha == LightOff {
+        switch currentLight {
+        case .red:
             redLight.alpha = LightOn
             greenLight.alpha = LightOff
-        } else if yellowLight.alpha == LightOff {
+            currentLight = .yellow
+        case .yellow:
             redLight.alpha = LightOff
             yellowLight.alpha = LightOn
-        } else if greenLight.alpha == LightOff {
+            currentLight = .green
+        case .green:
             yellowLight.alpha = LightOff
             greenLight.alpha = LightOn
+            currentLight = .red
         }
         
     }
